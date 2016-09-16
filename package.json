@@ -1,12 +1,12 @@
 {
-  "name": "yesBot",
+  "name": "comicDeliverBot",
   "version": "0.0.0",
-  "description": "",
+  "description": "delivers comics via telegram",
   "main": "index.js",
   "scripts": {
     "node": "node main.js"
   },
-  "author": "",
+  "author": "nikhil",
   "license": "BSD-2-Clause",
   "dependencies": {
     "cheerio": "^0.22.0",
