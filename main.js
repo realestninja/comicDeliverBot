@@ -1,4 +1,4 @@
-var token = '';
+var token = ''; 
 var TelegramBot = require('node-telegram-bot-api');
 var bot = new TelegramBot(token, {polling: true});
 var request = require('request');
@@ -11,7 +11,6 @@ bot.on('message', function(json) {
     var chatID = json.chat.id;
     var message = json.text;
     var splitMessage = message.split(/[ ,]+/);
-
     var comicType = splitMessage[0];
     var comicNumber = splitMessage[1];
 
@@ -22,6 +21,11 @@ bot.on('message', function(json) {
       case '/xkcd':
         getXKCD(comicNumber, chatID);
         break;
+      /*
+      case '/commitstrip':
+        getCommitStrip(comicNumber, chatID);
+        break;
+      */
       default:
         break;
     }
@@ -47,23 +51,37 @@ function getExplosm(number, chatID) {
   });
 }
 
+function getCommitStrip(number, chatID) {
+  var url = 'http://www.commitstrip.com/?random=1';
+  var container = '#entry-content img';
+
+  request(url, function(error, response, body) {
+    if(!error && response.statusCode == 200) {
+      $ = cheerio.load(body);
+      image = $(container).attr('src');
+      console.log($);
+      //sendComic(chatID, image);
+    }
+  });
+}
+
 function getXKCD(number, chatID) {
   var url = 'http://xkcd.com/info.0.json';
   var amountComics;
-  var image;
+  var alt;
 
   request({
     url: url,
     json: true
   }, function(error, response, body) {
     if (!error && response.statusCode == 200) {
-      amountComics = body.num;
-
       if (number == 'latest') {
         image = body.img;
-        sendComic(chatID, image);
+        alt = body.alt;
+        sendComic(chatID, image, alt);
       } else {
         if (number == null) {
+          amountComics = body.num;
           number = Math.floor(Math.random() * amountComics) + 1;
         }
 
@@ -74,7 +92,8 @@ function getXKCD(number, chatID) {
         }, function(error, response, body) {
           if(!error & response.statusCode == 200) {
             image = body.img;
-            sendComic(chatID, image);
+            alt = body.alt;
+            sendComic(chatID, image, alt);
           }
         });        
       }
@@ -82,8 +101,9 @@ function getXKCD(number, chatID) {
   });
 }
 
-function sendComic(chatID, link) {
+function sendComic(chatID, link, message) {
   bot.sendMessage(chatID, link);
+  bot.sendMessage(chatID, message);
 }
 
 console.log('bot running');
