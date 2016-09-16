@@ -12,13 +12,10 @@ bot.on('message', function(json) {
     var message = json.text;
 
     if (message == '!comic') {
-      var htmlBody;
-
       request('http://explosm.net/comics/random', function(error, response, body) {
         if(!error && response.statusCode == 200) {
           $ = cheerio.load(body);
-          image = $('#main-comic').attr('src');
-          image = image.slice(2);
+          image = $('#main-comic').attr('src').slice(2);
           sendComic(chatID, image);
         }
       });
