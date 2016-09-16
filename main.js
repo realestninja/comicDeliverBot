@@ -1,4 +1,4 @@
-var token = ''; 
+var token = '';
 var TelegramBot = require('node-telegram-bot-api');
 var bot = new TelegramBot(token, {polling: true});
 var request = require('request');
@@ -46,7 +46,7 @@ function getExplosm(number, chatID) {
     if(!error && response.statusCode == 200) {
       $ = cheerio.load(body);
       image = $(container).attr('src').slice(2);
-      sendComic(chatID, image);
+      sendMessage(chatID, image);
     }
   });
 }
@@ -60,7 +60,7 @@ function getCommitStrip(number, chatID) {
       $ = cheerio.load(body);
       image = $(container).attr('src');
       console.log($);
-      //sendComic(chatID, image);
+      //sendMessage(chatID, image);
     }
   });
 }
@@ -78,7 +78,8 @@ function getXKCD(number, chatID) {
       if (number == 'latest') {
         image = body.img;
         alt = body.alt;
-        sendComic(chatID, image, alt);
+        sendMessage(chatID, image);
+        sendMessage(chatID, 'No.' + body.num + ": " + alt);
       } else {
         if (number == null) {
           amountComics = body.num;
@@ -93,7 +94,8 @@ function getXKCD(number, chatID) {
           if(!error & response.statusCode == 200) {
             image = body.img;
             alt = body.alt;
-            sendComic(chatID, image, alt);
+            sendMessage(chatID, image);
+            sendMessage(chatID, 'No.' + body.num + ": " + alt);
           }
         });        
       }
@@ -101,9 +103,8 @@ function getXKCD(number, chatID) {
   });
 }
 
-function sendComic(chatID, link, message) {
+function sendMessage(chatID, link) {
   bot.sendMessage(chatID, link);
-  bot.sendMessage(chatID, message);
 }
 
 console.log('bot running');
