@@ -16,8 +16,11 @@ bot.on('message', function(json) {
     var comicNumber = splitMessage[1];
 
     switch(comicType) {
-      case '!explosm':
+      case '/explosm':
         getExplosm(comicNumber, chatID);
+        break;
+      case '/xkcd':
+        getXKCD(comicNumber, chatID);
         break;
       default:
         break;
@@ -40,6 +43,41 @@ function getExplosm(number, chatID) {
       $ = cheerio.load(body);
       image = $(container).attr('src').slice(2);
       sendComic(chatID, image);
+    }
+  });
+}
+
+function getXKCD(number, chatID) {
+  var url = 'http://xkcd.com/info.0.json';
+  var amountComics;
+  var image;
+
+  request({
+    url: url,
+    json: true
+  }, function(error, response, body) {
+    if (!error && response.statusCode == 200) {
+      amountComics = body.num;
+
+      if (number == 'latest') {
+        image = body.img;
+        sendComic(chatID, image);
+      } else {
+        if (number == null) {
+          number = Math.floor(Math.random() * amountComics) + 1;
+        }
+
+        url = 'http://xkcd.com/' + number + '/info.0.json';
+        request({
+          url: url,
+          json: true
+        }, function(error, response, body) {
+          if(!error & response.statusCode == 200) {
+            image = body.img;
+            sendComic(chatID, image);
+          }
+        });        
+      }
     }
   });
 }
