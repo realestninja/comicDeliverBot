@@ -1,0 +1,18 @@
+{
+  "name": "yesBot",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "node": "node main.js"
+  },
+  "author": "",
+  "license": "BSD-2-Clause",
+  "dependencies": {
+    "cheerio": "^0.22.0",
+    "node-telegram-bot-api": "~0.23.3"
+  },
+  "devDependencies": {
+    "request": "^2.74.0"
+  }
+}
