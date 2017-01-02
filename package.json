@@ -9,10 +9,12 @@
   "author": "nikhil",
   "license": "BSD-2-Clause",
   "dependencies": {
+    "bluebird": "^3.4.7",
     "cheerio": "^0.22.0",
     "node-telegram-bot-api": "~0.23.3"
   },
   "devDependencies": {
     "request": "^2.74.0",
+    "request-promise": "^4.1.1"
   }
 }
