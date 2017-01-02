@@ -2,11 +2,8 @@ var token = '';
 
 var TelegramBot = require('node-telegram-bot-api');
 var bot = new TelegramBot(token, {polling: true});
-
-var request = require('request-promise');
 var cheerio = require('cheerio');
-
-var image;
+var rp = require('request-promise');
 
 console.log('bot running');
 
@@ -26,14 +23,13 @@ bot.on('message', function(json) {
       case '/xkcd':
         getXKCD(comicNumber, chatID);
       break;
-      
-      default:
-      break;
+
+      default: break;
     }
   }
 });
 
-function sendMessage(chatID, img, text) {
+function sendComic(chatID, img, text) {
   bot.sendMessage(chatID, img);
 
   if(text) {
@@ -46,6 +42,7 @@ function sendMessage(chatID, img, text) {
 function getExplosm(number, chatID) {
   var url = 'http://explosm.net/';
   var container = number == 'latest' ? '#featured-comic' : '#main-comic';
+  var image;
   /*
   -'main-comic' is the container ID for comics
   -however, the latest comic has a different cotainer ID which is named 'featured-comic'
@@ -56,52 +53,56 @@ function getExplosm(number, chatID) {
     url += number != null ? number : 'random';
   }
 
-  request(url, function(error, response, body) {
-    if(!error && response.statusCode == 200) {
-      var $ = cheerio.load(body); //store DOM-like content
-      image = $(container).attr('src').slice(2); //use cheerio (jquery like) to get 'src' attr
-      sendMessage(chatID, image);
-    }
+  rp(url).then(function(data) {
+    var $ = cheerio.load(data); //store DOM-like content
+    image = $(container).attr('src').slice(2); //use cheerio (jquery like) to get 'src' attr
+    sendComic(chatID, image);
+  })
+  .catch(function(error) {
+    console.log('request-promise failed');
   });
 }
 
 function getXKCD(number, chatID) {
   /*
-  -url is initially set to call the API for the latest comic.
-  -JSON of latest comic also has the information of total amount of comics
+  -every xkcd comic can be requested by calling the API with a comic-specific url.
+  -more information: https://xkcd.com/json.html
+
+  -url is initially set to the latest comic.
+  -JSON of the latest comic also has the information about total amount of available comics
   */
   var url = 'http://xkcd.com/info.0.json'; 
-  var altText; //xkcd features a hidden text for each comic which will be stored here
+  var amountComics; //required to create a random number within the range of existing comics
 
+  //if number == latest -> send the last comic that was released
   if (number == 'latest') {
-    request({ url: url, json: true }, function(error, response, body) {
-      if (!error && response.statusCode == 200) {
-        image = body.img;
-        altText = body.alt;
-        sendMessage(chatID, image, 'No.' + body.num + ": " + altText);
-      }
-    });
+    handleXkcdRequest(chatID, url);
   } else {
-    request({url: url, json: true }, function(error, response, body) {
-      if (!error && response.statusCode == 200) {
-        amountComics = body.num;
-      }
-    }).then(function(data) {
+    //if a specific or random comic was requested -> get the amount of existing comics first
+    rp({url: url, json: true}).then(function(data) {
+      amountComics = data.num;
+    })
+    .then(function() {
       if (number == null || number > amountComics) {
+        //set number to a random value if no number is given or if given number exceeds the range
         number = Math.floor(Math.random() * amountComics) + 1;
       }
 
+      //change the API url to the corresponding request
       url = 'http://xkcd.com/' + number + '/info.0.json';
-      request({
-        url: url,
-        json: true
-      }, function(error, response, body) {
-        if(!error & response.statusCode == 200) {
-          image = body.img;
-          altText = body.alt;
-          sendMessage(chatID, image, 'No.' + body.num + ": " + altText);
-        }
-      });  
+      handleXkcdRequest(chatID, url);
+    })
+    .catch(function(error) {
+      console.log('request-promise failed');
     });
   }
+}
+
+function handleXkcdRequest(chatID, url) {
+  rp({url: url, json: true})
+    .then(function(data) {
+      sendComic(chatID, data.img, 'No.' + data.num + ": " + data.alt);
+      //data.alt is an alternative text which is featured on every xkcd comic
+    }
+  ); 
 }
