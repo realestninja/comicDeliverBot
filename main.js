@@ -11,7 +11,7 @@ bot.on('message', function(json) {
   if (json.hasOwnProperty('text')) {
     var chatID = json.chat.id; 
     var message = json.text;
-    var splitMessage = message.split(/[ ,]+/); //split message into words
+    var splitMessage = message.split(/[ ,]+/);
     var comicType = splitMessage[0]; //first word is the comic type. for now either /xkcd or /explosm
     var comicNumber = splitMessage[1]; //can be left empty. otherwise either a number or 'latest'
 
@@ -59,7 +59,7 @@ function getExplosm(number, chatID) {
     sendComic(chatID, image);
   })
   .catch(function(error) {
-    console.log('request-promise failed');
+    console.log(error);
   });
 }
 
@@ -93,7 +93,7 @@ function getXKCD(number, chatID) {
       handleXkcdRequest(chatID, url);
     })
     .catch(function(error) {
-      console.log('request-promise failed');
+      console.log(error);
     });
   }
 }
