@@ -1,5 +1,4 @@
 import { sendComic } from '../sendComic';
-import { load } from 'cheerio';
 import { get as g } from 'request-promise';
 const get = g as any;
 
