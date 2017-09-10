@@ -2,10 +2,9 @@ import * as TelegramBot from 'node-telegram-bot-api';
 import { load } from 'cheerio';
 import { get as g } from 'request-promise';
 import { sendComic } from './src/functions';
+import { token } from './token';
 
 const get = g as any;
-
-const token = '';
 const bot = new TelegramBot(token, { polling: true });
 
 console.log('bot running');
