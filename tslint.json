@@ -1,0 +1,39 @@
+{
+  "extends": [
+    "tslint:latest",
+    "tslint-eslint-rules"
+  ],
+  "rules": {
+    "curly": true,
+    "forin": true,
+    "indent": [true, "spaces"],
+    "quotemark": [true, "single", "avoid-escape"],
+    "trailing-comma": [true, {"multiline": "always", "singleline": "never"}],
+    "ordered-imports": false,
+    "object-literal-sort-keys": false,
+    "no-magic-numbers": true,
+    "no-default-export": false,
+    "ban": [true, ["alert"], ["confirm"]],
+    "variable-name": [
+        "ban-keywords",
+        "check-format",
+        "allow-pascal-case"
+    ],
+    "cyclomatic-complexity": [true, 7],
+    "max-file-line-count": [true, 300],
+    "no-unused-variable": [true],
+    "arrow-parens": [true, "ban-single-arg-parens"],
+    "interface-name": false,
+    "no-empty-interface": false,
+    "no-namespace": false,
+
+    "no-submodule-imports": false,
+    "space-in-parens": [true, "never"],
+    "no-constant-condition": true,
+    "no-extra-boolean-cast": true,
+    "no-extra-semi": true,
+    "no-irregular-whitespace": true,
+    "ter-indent": [true, 2, {"SwitchCase": 1}],
+    "object-curly-spacing": [true, "always"]
+  }
+}
