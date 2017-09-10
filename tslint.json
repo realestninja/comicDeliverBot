@@ -26,6 +26,7 @@
     "interface-name": false,
     "no-empty-interface": false,
     "no-namespace": false,
+    "no-console": false,
 
     "no-submodule-imports": false,
     "space-in-parens": [true, "never"],
