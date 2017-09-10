@@ -27,7 +27,7 @@
     "no-empty-interface": false,
     "no-namespace": false,
     "no-console": false,
-
+    "max-line-length": [true, 80],
     "no-submodule-imports": false,
     "space-in-parens": [true, "never"],
     "no-constant-condition": true,

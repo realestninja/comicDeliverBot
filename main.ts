@@ -12,8 +12,10 @@ bot.on('message', json => {
     const chatID = json.chat.id;
     const message = json.text;
     const splitMessage = message.split(/[ ,]+/);
-    const comicType = splitMessage[0]; // first word is the comic type. for now either /xkcd or /explosm
-    const comicNumber = splitMessage[1]; // can be left empty. otherwise either a number or 'latest'
+    // first word is the comic type. for now either /xkcd or /explosm
+    const comicType = splitMessage[0];
+    // can be left empty. otherwise either a number or 'latest'
+    const comicNumber = splitMessage[1];
 
     switch (comicType) {
       case '/explosm':
@@ -44,10 +46,12 @@ function getExplosm(number, chatID) {
   let url = 'http://explosm.net/';
   const container = number === 'latest' ? '#featured-comic' : '#main-comic';
   let image;
-  /*
-  -'main-comic' is the container ID for comics
-  -however, the latest comic has a different cotainer ID which is named 'featured-comic'
-  */
+
+  /**
+   * -'main-comic' is the container ID for comics
+   * -however, the latest comic has a different
+   * container ID which is named 'featured-comic'
+   */
 
   if (number !== 'latest') {
     url += 'comics/';
@@ -55,9 +59,11 @@ function getExplosm(number, chatID) {
   }
 
   requestPromise(url).then(data => {
-    const $ = cheerio.load(data); // store DOM-like content
+    // store DOM-like content
+    const $ = cheerio.load(data);
     const positionToCut = 2;
-    image = $(container).attr('src').slice(positionToCut); // use cheerio (jquery like) to get 'src' attr
+    // use cheerio (jquery like) to get 'src' attr
+    image = $(container).attr('src').slice(positionToCut);
     sendComic(chatID, image, null);
   })
     .catch(error => {
@@ -66,27 +72,37 @@ function getExplosm(number, chatID) {
 }
 
 function getXKCD(number, chatID) {
-  /*
-  -every xkcd comic can be requested by calling the API with a comic-specific url.
-  -more information: https://xkcd.com/json.html
+  /**
+   * -every xkcd comic can be requested by calling the API with a
+   * comic-specific url.
+   * -more information: https://xkcd.com/json.html
+   * -url is initially set to the latest comic.
+   * -JSON of the latest comic also has the information about total amount of
+   * available comics
+   */
 
-  -url is initially set to the latest comic.
-  -JSON of the latest comic also has the information about total amount of available comics
-  */
   let url = 'http://xkcd.com/info.0.json';
-  let amountComics; // required to create a random number within the range of existing comics
+  // required to create a random number within the range of existing comics
+  let amountComics;
 
   // if number == latest -> send the last comic that was released
   if (number === 'latest') {
     handleXkcdRequest(chatID, url);
   } else {
-    // if a specific or random comic was requested -> get the amount of existing comics first
+
+    /**
+     * if a specific or random comic was requested -> get the amount of existing
+     * comics first
+     */
     requestPromise({ json: true, url }).then(data => {
       amountComics = data.num;
     })
       .then(() => {
         if (number == null || number > amountComics) {
-          // set number to a random value if no number is given or if given number exceeds the range
+          /**
+           * set number to a random value if no number is given or if given
+           * number exceeds the range
+           */
           number = Math.floor(Math.random() * amountComics) + 1;
         }
 
