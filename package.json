@@ -4,7 +4,7 @@
   "description": "delivers comics via telegram",
   "main": "index.js",
   "scripts": {
-    "node": "node main.js"
+    "start": "ts-node main.ts"
   },
   "author": "nikhil",
   "license": "BSD-2-Clause",
@@ -15,6 +15,7 @@
     "bluebird": "^3.4.7",
     "cheerio": "^0.22.0",
     "node-telegram-bot-api": "~0.23.3",
+    "ts-node": "^3.3.0",
     "typescript": "^2.5.2"
   },
   "devDependencies": {

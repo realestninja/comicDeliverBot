@@ -1,6 +1,9 @@
-import TelegramBot from 'node-telegram-bot-api';
-import cheerio from 'cheerio';
-import requestPromise from 'request-promise';
+import * as TelegramBot from 'node-telegram-bot-api';
+import { load } from 'cheerio';
+import { get as g } from 'request-promise';
+import { sendComic } from './src/functions';
+
+const get = g as any;
 
 const token = '';
 const bot = new TelegramBot(token, { polling: true });
@@ -32,16 +35,6 @@ bot.on('message', json => {
   }
 });
 
-function sendComic(chatID, img, text) {
-  bot.sendMessage(chatID, img);
-
-  if (text) {
-    bot.sendMessage(chatID, text);
-  }
-
-  console.log('comic has been delivered');
-}
-
 function getExplosm(number, chatID) {
   let url = 'http://explosm.net/';
   const container = number === 'latest' ? '#featured-comic' : '#main-comic';
@@ -58,13 +51,13 @@ function getExplosm(number, chatID) {
     url += number != null ? number : 'random';
   }
 
-  requestPromise(url).then(data => {
+  get(url).then(data => {
     // store DOM-like content
-    const $ = cheerio.load(data);
+    const $ = load(data);
     const positionToCut = 2;
     // use cheerio (jquery like) to get 'src' attr
     image = $(container).attr('src').slice(positionToCut);
-    sendComic(chatID, image, null);
+    sendComic(bot, chatID, image, null);
   })
     .catch(error => {
       console.log(error);
@@ -94,7 +87,7 @@ function getXKCD(number, chatID) {
      * if a specific or random comic was requested -> get the amount of existing
      * comics first
      */
-    requestPromise({ json: true, url }).then(data => {
+    get({ json: true, url }).then(data => {
       amountComics = data.num;
     })
       .then(() => {
@@ -117,9 +110,9 @@ function getXKCD(number, chatID) {
 }
 
 function handleXkcdRequest(chatID, url) {
-  requestPromise({ json: true, url })
+  get({ json: true, url })
     .then(data => {
-      sendComic(chatID, data.img, 'No.' + data.num + ': ' + data.alt);
+      sendComic(bot, chatID, data.img, 'No.' + data.num + ': ' + data.alt);
       // data.alt is an alternative text which is featured on every xkcd comic
     });
 }
