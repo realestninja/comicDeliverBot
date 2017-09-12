@@ -4,15 +4,16 @@
 [telegram.me/comicdeliverbot](https://telegram.me/comicdeliverbot)
  
 * '/xkcd'
-will deliver a random comic
+random comic from xkcd.com
 
 * '/xkcd latest'
-will deliver the latest comic
+latest comic from xkcd.com
 
 * '/xkcd 123'
-will deliver the comic with the id 123.
+the comic with the id 246 :)
 
 * '/explosm'
-works the same way.
+has the same commands for random and latest.
+
 
 Github: https://github.com/realestninja/comicDeliverBot
