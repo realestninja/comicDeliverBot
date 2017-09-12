@@ -1,4 +1,5 @@
 import * as TelegramBot from 'node-telegram-bot-api';
+import * as process from 'process';
 
 import { getExplosm } from './src/comic_types/getExplosm';
 import { getXKCD } from './src/comic_types/getXKCD';
@@ -6,13 +7,13 @@ import { getXKCD } from './src/comic_types/getXKCD';
 import { token, botSettings, url } from './settings';
 
 /*
-const bot = new TelegramBot(token, botSettings);
+const bot = new TelegramBot(options, botSettings);
 bot.setWebHook(url);
 */
 
 const bot = new TelegramBot(token, { polling: true });
 
-console.log('bot running');
+console.log('bot running - pid: ' +  process.pid);
 
 bot.on('message', json => {
   if (json.hasOwnProperty('text')) {
