@@ -16,7 +16,8 @@ export function getExplosm(bot, number, chatID) {
 
   if (number !== 'latest') {
     url += 'comics/';
-    url += number != null ? number : 'random';
+    //url += number != null ? number : 'random';
+    url += 'random';
   }
 
   get(url).then(data => {
