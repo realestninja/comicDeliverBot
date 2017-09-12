@@ -4,7 +4,4 @@ export function sendComic(bot, chatID, img, text) {
   if (text) {
     bot.sendMessage(chatID, text);
   }
-
-  console.log('comic has been delivered');
 }
-
