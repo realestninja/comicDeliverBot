@@ -34,7 +34,7 @@ bot.on('message', json => {
     if (comicType in availableComicTypes) {
       const processComic = availableComicTypes[comicType];
       processComic(bot, comicNumber, chatID);
-      sendReport(comicType);
+      // sendReport(comicType);
     }
   }
 });
