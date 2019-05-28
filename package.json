@@ -4,7 +4,8 @@
   "description": "delivers comics via telegram",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node main.ts"
+    "start": "ts-node main.ts",
+    "live": "ts-node main.ts &"
   },
   "author": "nikhil",
   "license": "BSD-2-Clause",
