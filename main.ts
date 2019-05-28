@@ -1,5 +1,6 @@
 import * as TelegramBot from 'node-telegram-bot-api';
 import * as process from 'process';
+import * as fs from 'fs';
 
 import { getExplosm } from './src/comic_types/getExplosm';
 import { getXKCD } from './src/comic_types/getXKCD';
@@ -15,6 +16,9 @@ bot.setWebHook(url);
 const bot = new TelegramBot(token, { polling: true });
 
 console.log('bot running - pid: ' +  process.pid);
+fs.writeFile('./latest.pid', process.pid, err => {
+	if (err) { throw err; }
+});
 
 bot.on('message', json => {
   if (json.hasOwnProperty('text')) {
