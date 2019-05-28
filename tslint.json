@@ -6,7 +6,7 @@
   "rules": {
     "curly": true,
     "forin": true,
-    "indent": [true, "spaces"],
+    "indent": [true, "tabs", 2],
     "quotemark": [true, "single", "avoid-escape"],
     "trailing-comma": [true, {"multiline": "always", "singleline": "never"}],
     "ordered-imports": false,
@@ -34,7 +34,6 @@
     "no-extra-boolean-cast": true,
     "no-extra-semi": true,
     "no-irregular-whitespace": true,
-    "ter-indent": [true, 2, {"SwitchCase": 1}],
     "object-curly-spacing": [true, "always"]
   }
 }
