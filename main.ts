@@ -16,7 +16,7 @@ bot.setWebHook(url);
 const bot = new TelegramBot(token, { polling: true });
 
 console.log('bot running - pid: ' +  process.pid);
-fs.writeFile('./latest.pid', process.pid, err => {
+fs.writeFile('./latest.pid', `${process.pid}\n`, err => {
 	if (err) { throw err; }
 });
 
